@@ -1,10 +1,16 @@
 <script lang="ts">
-    import JsonInput from '$lib/JsonInput.svelte'
+	import JsonInput from '$lib/JsonInput.svelte';
+	import KeyboardEditor from '$lib/KeyboardEditor.svelte';
 
-    let data: object | undefined = $state(undefined);
+	let keyboard: Keyboard | undefined = $state(undefined);
+	let keymap: Keymap | undefined = $state(undefined);
 </script>
-
 
 <h1>keyboard-configurator</h1>
 
-<JsonInput bind:data />
+<div class="flex-colun flex">
+	<JsonInput bind:data={keyboard} />
+	<JsonInput bind:data={keymap} />
+</div>
+
+<KeyboardEditor bind:keyboard bind:keymap />
