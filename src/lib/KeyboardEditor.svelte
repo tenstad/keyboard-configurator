@@ -1,5 +1,8 @@
 <script lang="ts">
-	let size = 50;
+	import { displayLabel, type KeyCombo } from './keys';
+	import LabelGroup from './LabelGroup.svelte';
+
+	let size = 60;
 
 	let { keyboard = $bindable(), keymap = $bindable() } = $props<{
 		keyboard: Keyboard;
@@ -12,6 +15,12 @@
 			? keymap.layout
 			: Object.keys(keyboard.layouts)[0]
 	);
+	let layer: KeyCombo[] = $derived([
+		...keymap.layers[activeLayer].map(displayLabel),
+		...Array(100)
+			.keys()
+			.map(() => ({ upper: [[{ text: 'N/A', type: 'raw' }]] }))
+	]);
 
 	let dragged: number | undefined = $state(undefined);
 	let draggedOver: number | undefined = $state(undefined);
@@ -66,8 +75,7 @@
 	<div class="relative">
 		{#each keyboard.layouts[activeLayout].layout as key, i}
 			<div
-				class="
-		{i === draggedOver ? `border-blue-200` : 'border-white'} {i === dragged
+				class="{i === draggedOver ? `border-blue-200` : 'border-white'} {i === dragged
 					? 'bg-gray-200'
 					: ''} absolute border-2"
 				role="cell"
@@ -86,14 +94,46 @@
 			>
 				<div style:opacity={i == dragged ? 0 : 1}>
 					<div
-						class="absolute flex h-full w-full items-center justify-center rounded-lg border border-gray-200 bg-gray-100 text-xs font-semibold text-gray-800"
+						class="absolute flex h-full w-full flex-col items-center justify-center rounded-lg border border-gray-200 bg-gray-100 text-center text-gray-800"
 						draggable="true"
 						role="button"
 						tabindex={i}
 						ondragstart={(e) => handleDragStart(e, i)}
 						ondragend={(e) => handleDragEnd(e, i)}
 					>
-						<span>{keymap.layers[activeLayer][i]}</span>
+						{#each [[layer[i].upper, true, layer[i].lower != undefined], [layer[i].lower, false, layer[i].upper != undefined]] as [labelGroups, isUpper, otherExists]}
+							{#if labelGroups !== undefined}
+								<div class="flex flex-row items-center gap-1">
+									{#each labelGroups as labelGroup}
+										{#if labelGroup.length > 1}
+											<div
+												class="{!isUpper
+													? ['grid-cols-1', 'grid-cols-2', 'grid-cols-3', 'grid-cols-4'][
+															labelGroup.length - 1
+														]
+													: labelGroup.length > 3
+														? 'grid-cols-2'
+														: 'grid-cols-1'} grid items-center justify-items-center"
+											>
+												<LabelGroup
+													{labelGroup}
+													{labelGroups}
+													{isUpper}
+													{otherExists}
+												/>
+											</div>
+										{:else}
+											<LabelGroup
+												{labelGroup}
+												{labelGroups}
+												{isUpper}
+												{otherExists}
+											/>
+										{/if}
+									{/each}
+								</div>
+							{/if}
+						{/each}
 					</div>
 				</div>
 			</div>

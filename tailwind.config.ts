@@ -4,7 +4,10 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {},
+		fontFamily: {
+			mono: ['Courier New', 'monospace']
+		}
 	},
 
 	plugins: []

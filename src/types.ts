@@ -3,10 +3,10 @@ type Keyboard = {
 };
 
 type Layout = {
-	layout: Key[];
+	layout: LayoutKey[];
 };
 
-type Key = {
+type LayoutKey = {
 	matrix: [number, number];
 	x: number;
 	y: number;
