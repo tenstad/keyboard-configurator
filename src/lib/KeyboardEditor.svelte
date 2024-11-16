@@ -55,6 +55,11 @@
 					onclick={() => (activeLayer = i)}>{i}</button
 				>
 			{/each}
+			<button
+				class="rounded-lg border border-gray-200 bg-gray-100 p-2 text-xs font-semibold text-gray-800"
+				onclick={() => keymap.layers.push(keyboard.layouts[activeLayout].layout.map(() => 'KC_NO'))}
+				>+</button
+			>
 		</div>
 	</div>
 
