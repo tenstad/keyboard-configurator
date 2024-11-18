@@ -34,7 +34,7 @@
 	{#if label.text}
 		<span
 			class="{{
-				text: 'font-medium',
+				text: '',
 				raw: 'font-mono'
 			}[label.type]} {!isUpper
 				? label.text.length == 1 // lower
