@@ -3,6 +3,7 @@
 	import LabelGroup from './LabelGroup.svelte';
 
 	let size = 60;
+	let gap = 2;
 
 	let { keyboard = $bindable(), keymap = $bindable() } = $props<{
 		keyboard: Keyboard;
@@ -52,7 +53,7 @@
 		<div>
 			{#each Object.keys(keyboard?.layouts) as layout}
 				<button
-					class="rounded-lg border border-gray-200 bg-gray-100 p-2 text-xs font-semibold text-gray-800"
+					class="rounded-md border border-gray-200 bg-gray-100 p-2 text-xs font-semibold text-gray-800"
 					onclick={() => (activeLayout = layout)}>{layout}</button
 				>
 			{/each}
@@ -60,12 +61,12 @@
 		<div>
 			{#each Object.keys(keymap?.layers) as _, i}
 				<button
-					class="rounded-lg border border-gray-200 bg-gray-100 p-2 text-xs font-semibold text-gray-800"
+					class="rounded-md border border-gray-200 bg-gray-100 p-2 text-xs font-semibold text-gray-800"
 					onclick={() => (activeLayer = i)}>{i}</button
 				>
 			{/each}
 			<button
-				class="rounded-lg border border-gray-200 bg-gray-100 p-2 text-xs font-semibold text-gray-800"
+				class="rounded-md border border-gray-200 bg-gray-100 p-2 text-xs font-semibold text-gray-800"
 				onclick={() => keymap.layers.push(keyboard.layouts[activeLayout].layout.map(() => 'KC_NO'))}
 				>+</button
 			>
@@ -75,9 +76,7 @@
 	<div class="relative">
 		{#each keyboard.layouts[activeLayout].layout as key, i}
 			<div
-				class="{i === draggedOver ? `border-blue-200` : 'border-white'} {i === dragged
-					? 'bg-gray-200'
-					: ''} absolute border-2"
+				class="absolute"
 				role="cell"
 				tabindex={i}
 				ondragover={(e) => {
@@ -85,16 +84,25 @@
 					handleDragOver(e, i);
 				}}
 				ondragexit={(e) => handleDragExit(e, i)}
+				ondragleave={(e) => handleDragExit(e, i)}
 				ondrop={(e) => handleDrop(e, i)}
-				style:left={`${size * key.x}px`}
-				style:top={`${size * key.y}px`}
+				style:left={`${(size + gap) * key.x}px`}
+				style:top={`${(size + gap) * key.y}px`}
 				style:width={`${size}px`}
 				style:height={`${size}px`}
-				style:border-radius="10px"
 			>
+				<div
+					class={(i === draggedOver
+						? 'bg-amber-300 dark:bg-amber-600'
+						: 'bg-black opacity-5 dark:opacity-15') + ' absolute h-full w-full rounded-md'}
+				></div>
 				<div style:opacity={i == dragged ? 0 : 1}>
 					<div
-						class="absolute flex h-full w-full flex-col items-center justify-center rounded-lg border border-gray-200 bg-gray-100 text-center text-gray-800"
+						class={(i === dragged || i === draggedOver
+							? 'bg-amber-300 dark:bg-amber-600 dark:text-white '
+							: 'bg-white text-neutral-800 hover:bg-amber-300 hover:text-black' +
+								' dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-amber-600 dark:hover:text-white') +
+							' absolute flex h-full w-full flex-col items-center justify-center rounded-md text-center'}
 						draggable="true"
 						role="button"
 						tabindex={i}
@@ -115,20 +123,10 @@
 														? 'grid-cols-2'
 														: 'grid-cols-1'} grid items-center justify-items-center"
 											>
-												<LabelGroup
-													{labelGroup}
-													{labelGroups}
-													{isUpper}
-													{otherExists}
-												/>
+												<LabelGroup {labelGroup} {labelGroups} {isUpper} {otherExists} />
 											</div>
 										{:else}
-											<LabelGroup
-												{labelGroup}
-												{labelGroups}
-												{isUpper}
-												{otherExists}
-											/>
+											<LabelGroup {labelGroup} {labelGroups} {isUpper} {otherExists} />
 										{/if}
 									{/each}
 								</div>
