@@ -109,25 +109,11 @@
 						ondragstart={(e) => handleDragStart(e, i)}
 						ondragend={(e) => handleDragEnd(e, i)}
 					>
-						{#each [[layer[i].upper, true, layer[i].lower != undefined], [layer[i].lower, false, layer[i].upper != undefined]] as [labelGroups, isUpper, otherExists]}
+						{#each [[layer[i].upper, false, layer[i].lower != undefined], [layer[i].lower, true, layer[i].upper != undefined]] as [labelGroups, isLower, otherExists]}
 							{#if labelGroups !== undefined}
 								<div class="flex flex-row items-center gap-1">
 									{#each labelGroups as labelGroup}
-										{#if labelGroup.length > 1}
-											<div
-												class="{!isUpper
-													? ['grid-cols-1', 'grid-cols-2', 'grid-cols-3', 'grid-cols-4'][
-															labelGroup.length - 1
-														]
-													: labelGroup.length > 3
-														? 'grid-cols-2'
-														: 'grid-cols-1'} grid items-center justify-items-center"
-											>
-												<LabelGroup {labelGroup} {labelGroups} {isUpper} {otherExists} />
-											</div>
-										{:else}
-											<LabelGroup {labelGroup} {labelGroups} {isUpper} {otherExists} />
-										{/if}
+										<LabelGroup {labelGroup} {labelGroups} {isLower} {otherExists} />
 									{/each}
 								</div>
 							{/if}

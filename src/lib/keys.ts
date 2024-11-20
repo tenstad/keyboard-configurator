@@ -4,10 +4,13 @@ type KeyCombo = {
 	upper: Label[][];
 	lower: Label[][] | undefined;
 };
-type Label = {
-	text: string | undefined;
+type Label = TextLabel | IconLabel;
+type TextLabel = {
+	text: string;
 	type: string;
-	icon: string | undefined;
+};
+type IconLabel = {
+	icon: string;
 };
 
 function key(raw: string): Label[][] {
@@ -16,26 +19,22 @@ function key(raw: string): Label[][] {
 			[
 				{
 					text: raw,
-					type: 'raw',
-					icon: undefined
+					type: 'raw'
 				}
 			]
 		];
 	}
 
-	let text: string | undefined = keys[raw].label.replace(' (dead)', '');
-	let icon = undefined;
-	let type = 'text';
-
 	let key = keys[raw].fullKey ?? raw;
 	if (key in icons) {
-		icon = icons[key];
-		text = undefined;
+		return [[{ icon: icons[key] }]];
 	}
+
+	let text = keys[raw].label.replace(' (dead)', '');
 	if (key in abbreviations) {
 		text = abbreviations[key];
 	}
-	return [[{ text, type, icon }]];
+	return [[{ text, type: 'text' }]];
 }
 
 // Bluetooth
@@ -83,10 +82,10 @@ function keyCombo(raw: string): KeyCombo {
 				lower = key(outer);
 			}
 		} else if (outer == 'LT') {
-			lower = [[{ icon: 'LUCIDE_LAYERS_2', text: outerParam, type: 'text' }]];
+			lower = [[{ icon: 'LUCIDE_LAYERS_2' }], [{ text: outerParam, type: 'text' }]];
 		} else if (['MO', 'TG', 'TO', 'TT', 'DF', 'OSL'].includes(outer)) {
-			upper = [[{ icon: 'LUCIDE_LAYERS_2', text: inner, type: 'text' }]];
-			lower = [[{ text: outer, type: 'raw', icon: undefined }]];
+			upper = [[{ icon: 'LUCIDE_LAYERS_2' }], [{ text: inner, type: 'text' }]];
+			lower = [[{ text: outer, type: 'raw' }]];
 		} else if (outer == 'OSM') {
 			if (inner.slice(4) in modifiers) {
 				let mods = modifiers[inner.slice(4)].labels;
@@ -96,7 +95,7 @@ function keyCombo(raw: string): KeyCombo {
 			} else {
 				upper = key(inner);
 			}
-			lower = [[{ text: outer, type: 'raw', icon: undefined }]];
+			lower = [[{ text: outer, type: 'raw' }]];
 		} else if (outer in modifiers) {
 			let mods = modifiers[outer].labels;
 			upper = [
@@ -104,7 +103,7 @@ function keyCombo(raw: string): KeyCombo {
 				...upper
 			];
 		} else {
-			lower = [[{ text: outer, type: 'raw', icon: undefined }]];
+			lower = [[{ text: outer, type: 'raw' }]];
 		}
 	}
 	return { upper, lower };
@@ -150,7 +149,7 @@ const abbreviations = {
 };
 
 const CONTROL = {
-	full: 'Control',
+	name: 'Control',
 	icon: 'LUCIDE_CHEVRON_UP'
 };
 const SHIFT = {
@@ -268,12 +267,8 @@ const modifiers = Object.fromEntries(
 				{
 					side,
 					keys,
-					description: `Hold ${keys.map((key) => side + ' ' + key.full).join(', ')} and press`,
-					labels: keys.map((key) => ({
-						type: 'icon',
-						icon: key.icon,
-						label: undefined
-					}))
+					description: `Hold ${keys.map((key) => side + ' ' + key.name).join(', ')} and press`,
+					labels: keys.map(({ icon }) => ({ icon }))
 				}
 			])
 		)
