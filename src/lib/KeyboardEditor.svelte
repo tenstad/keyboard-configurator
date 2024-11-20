@@ -18,7 +18,7 @@
 	);
 	let layer: KeyCombo[] = $derived([
 		...keymap.layers[activeLayer].map(displayLabel),
-		...Array(100)
+		...Array(1000)
 			.keys()
 			.map(() => ({ upper: [[{ text: 'N/A', type: 'raw' }]] }))
 	]);
