@@ -22,6 +22,9 @@
 			.keys()
 			.map(() => ({ upper: [[{ text: 'N/A', type: 'raw' }]] }))
 	]);
+	let minX = Math.min(...keyboard.layouts[activeLayout].layout.map(({ x }: { x: number }) => x));
+	let maxX = Math.max(...keyboard.layouts[activeLayout].layout.map(({ x }: { x: number }) => x));
+	let minY = Math.min(...keyboard.layouts[activeLayout].layout.map(({ y }: { y: number }) => y));
 
 	let dragged: number | undefined = $state(undefined);
 	let draggedOver: number | undefined = $state(undefined);
@@ -73,7 +76,7 @@
 		</div>
 	</div>
 
-	<div class="relative">
+	<div class="relative" style:width="{(size + gap) * (maxX - minX + 1) - gap}px">
 		{#each keyboard.layouts[activeLayout].layout as key, i}
 			<div
 				class="absolute"
@@ -86,8 +89,8 @@
 				ondragexit={(e) => handleDragExit(e, i)}
 				ondragleave={(e) => handleDragExit(e, i)}
 				ondrop={(e) => handleDrop(e, i)}
-				style:left={`${(size + gap) * key.x}px`}
-				style:top={`${(size + gap) * key.y}px`}
+				style:left={`${(size + gap) * (key.x - minX)}px`}
+				style:top={`${(size + gap) * (key.y - minY)}px`}
 				style:width={`${size}px`}
 				style:height={`${size}px`}
 			>
