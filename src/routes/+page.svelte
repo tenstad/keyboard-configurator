@@ -14,7 +14,9 @@
 </div>
 
 {#if keyboard?.layouts != undefined && Object.keys(keyboard.layouts).length > 0 && Object.values(keyboard.layouts).every((layout) => layout?.layout !== undefined) && keymap?.layers !== undefined && keymap.layers.length > 0}
-	<KeyboardEditor bind:keyboard bind:keymap />
+	<div class="flex-colun flex justify-center">
+		<KeyboardEditor bind:keyboard bind:keymap />
+	</div>
 {:else}
 	<p>Invalid data</p>
 {/if}
