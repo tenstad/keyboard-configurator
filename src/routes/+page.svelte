@@ -6,8 +6,6 @@
 	let keymap: Keymap | undefined = $state(undefined);
 </script>
 
-<h1>keyboard-configurator</h1>
-
 <div class="flex-colun flex">
 	<JsonInput bind:data={keyboard} />
 	<JsonInput bind:data={keymap} />

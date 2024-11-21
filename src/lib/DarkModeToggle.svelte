@@ -13,7 +13,7 @@
 	}
 </script>
 
-<div>
+<div class="absolute right-6 top-6">
 	<input checked={darkMode} onclick={handleSwitchDarkMode} type="checkbox" id="theme-toggle" />
 	<label for="theme-toggle"></label>
 </div>
@@ -24,7 +24,7 @@
 	}
 
 	#theme-toggle + label {
-		@apply absolute right-6 top-6 inline-block h-12 w-12 cursor-pointer rounded-full duration-300 content-[''];
+		@apply inline-block h-12 w-12 cursor-pointer rounded-full duration-300 content-[''];
 	}
 
 	#theme-toggle:not(:checked) + label {
