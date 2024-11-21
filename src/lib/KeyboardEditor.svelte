@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { keyDefinitions } from '../keycodes';
 	import { displayLabel, type KeyCombo } from './keys';
 	import LabelGroup from './LabelGroup.svelte';
 	import TabButton from './TabButton.svelte';
@@ -128,10 +129,10 @@
 						ondragexit={() => handleDragExit(layer, index)}
 						ondragleave={() => handleDragExit(layer, index)}
 						ondrop={() => handleDrop(layer, index)}
-						style:left={`${(size + gap) * (key.x - minX)}px`}
-						style:top={`${(size + gap) * (key.y - minY)}px`}
-						style:width={`${size}px`}
-						style:height={`${size}px`}
+						style:left="{(size + gap) * (key.x - minX)}px"
+						style:top="{(size + gap) * (key.y - minY)}px"
+						style:width="{size}px"
+						style:height="{size}px"
 					>
 						<div
 							class={(layer === draggedOver?.layer && index === draggedOver?.index
@@ -155,8 +156,8 @@
 								{#each [[layers[layer][index].upper, false, layers[layer][index].lower != undefined], [layers[layer][index].lower, true, layers[layer][index].upper != undefined]] as [labelGroups, isLower, otherExists]}
 									{#if labelGroups !== undefined}
 										<div class="flex flex-row items-center gap-1">
-											{#each labelGroups as labelGroup}
-												<LabelGroup {labelGroup} {labelGroups} {isLower} {otherExists} />
+											{#each labelGroups as labelGroup, i}
+												<LabelGroup {labelGroups} index={i} {isLower} {otherExists} />
 											{/each}
 										</div>
 									{/if}
@@ -169,3 +170,44 @@
 		{/each}
 	</div>
 </div>
+{#each Object.entries(keyDefinitions.press) as [category, groups]}
+	<!-- <h2 class="text-3xl text-neutral-800 dark:text-neutral-100">{category}</h2> -->
+	{#each Object.entries(groups) as [group, keys]}
+		<div class="flex-rows mx-1 my-5 flex">
+			<div class="pt-1">
+				<h2 class="w-48 px-4 text-right text-sm text-neutral-800 dark:text-neutral-100">
+					{category}
+				</h2>
+				<h2 class="w-48 px-4 text-right text-2xl text-neutral-800 dark:text-neutral-100">
+					{group}
+				</h2>
+			</div>
+			<div class="grid w-full gap-1" style:grid-template-columns="repeat(auto-fit, {size}px)">
+				{#each keys as { key }}
+					<div
+						class={(false
+							? 'bg-amber-300 dark:bg-amber-600 dark:text-white '
+							: 'bg-white text-neutral-800 hover:bg-amber-300 hover:text-black' +
+								' dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-amber-600 dark:hover:text-white') +
+							' flex h-full w-full flex-col items-center justify-center rounded-md text-center'}
+						draggable="true"
+						role="button"
+						tabindex={0}
+						ondragstart={() => {}}
+						ondragend={() => {}}
+						style:width="{size}px"
+						style:height="{size}px"
+						title={key}
+					>
+						<LabelGroup
+							labelGroups={displayLabel(key).upper}
+							index={0}
+							isLower={false}
+							otherExists={false}
+						/>
+					</div>
+				{/each}
+			</div>
+		</div>
+	{/each}
+{/each}

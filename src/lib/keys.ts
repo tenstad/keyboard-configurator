@@ -1,4 +1,4 @@
-import keys from '../keycodes';
+import { knownKeys } from '../keycodes';
 
 type KeyCombo = {
 	upper: Label[][];
@@ -14,7 +14,7 @@ type IconLabel = {
 };
 
 function key(raw: string): Label[][] {
-	if (!(raw in keys)) {
+	if (!(raw in knownKeys)) {
 		return [
 			[
 				{
@@ -25,12 +25,12 @@ function key(raw: string): Label[][] {
 		];
 	}
 
-	let key = keys[raw].fullKey ?? raw;
+	let key = knownKeys[raw].fullKey ?? raw;
 	if (key in icons) {
 		return [[{ icon: icons[key] }]];
 	}
 
-	let text = keys[raw].label.replace(' (dead)', '');
+	let text = knownKeys[raw].label.replace(' (dead)', '');
 	if (key in abbreviations) {
 		text = abbreviations[key];
 	}
