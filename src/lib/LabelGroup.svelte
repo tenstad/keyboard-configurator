@@ -2,13 +2,13 @@
 	import Icon from './Icon.svelte';
 	import { splitLabel, type Label } from './keys';
 
-	let { labelGroup, labelGroups, isLower, otherExists } = $props<{
-		labelGroup: Label[];
+	let { labelGroups, index, isLower, otherExists } = $props<{
 		labelGroups: Label[][];
-		groupCount: number;
+		index: number;
 		isLower: boolean;
 		otherExists: boolean;
 	}>();
+	let labelGroup = $derived(labelGroups[index]);
 
 	let textLength = labelGroups
 		.flat()
