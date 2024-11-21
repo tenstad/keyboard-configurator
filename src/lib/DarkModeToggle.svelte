@@ -14,8 +14,8 @@
 </script>
 
 <div>
-	<input checked={darkMode} on:click={handleSwitchDarkMode} type="checkbox" id="theme-toggle" />
-	<label for="theme-toggle" />
+	<input checked={darkMode} onclick={handleSwitchDarkMode} type="checkbox" id="theme-toggle" />
+	<label for="theme-toggle"></label>
 </div>
 
 <style lang="postcss">
@@ -28,11 +28,11 @@
 	}
 
 	#theme-toggle:not(:checked) + label {
-		@apply bg-amber-400;
+		@apply bg-amber-300;
 	}
 
 	#theme-toggle:checked + label {
 		@apply bg-transparent;
-		box-shadow: inset -18px -16px 1px 1px #ddd;
+		box-shadow: inset -18px -18px theme('colors.amber.200');
 	}
 </style>
