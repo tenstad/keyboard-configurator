@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { displayLabel, type KeyCombo } from './keys';
 	import LabelGroup from './LabelGroup.svelte';
+	import TabButton from './TabButton.svelte';
 
 	let size = 60;
 	let gap = 2;
@@ -51,31 +52,28 @@
 	}
 </script>
 
-<div>
-	<div>
-		<div>
-			{#each Object.keys(keyboard?.layouts) as layout}
-				<button
-					class="rounded-md border border-gray-200 bg-gray-100 p-2 text-xs font-semibold text-gray-800"
-					onclick={() => (activeLayout = layout)}>{layout}</button
-				>
-			{/each}
-		</div>
-		<div>
-			{#each Object.keys(keymap?.layers) as _, i}
-				<button
-					class="rounded-md border border-gray-200 bg-gray-100 p-2 text-xs font-semibold text-gray-800"
-					onclick={() => (activeLayer = i)}>{i}</button
-				>
-			{/each}
-			<button
-				class="rounded-md border border-gray-200 bg-gray-100 p-2 text-xs font-semibold text-gray-800"
-				onclick={() => keymap.layers.push(keyboard.layouts[activeLayout].layout.map(() => 'KC_NO'))}
-				>+</button
-			>
-		</div>
+<div class="absolute flex w-52 flex-col p-5">
+	<p class="text-xl dark:text-white">Layouts</p>
+	{#each Object.keys(keyboard?.layouts) as layout}
+		<TabButton onclick={() => (activeLayout = layout)} active={activeLayout == layout}
+			>{layout.replace('LAYOUT_', '')}</TabButton
+		>
+	{/each}
+	<div class="mt-4 flex flex-row justify-between">
+		<p class="text-xl dark:text-white">Layers</p>
+		<button
+			class="rounded px-2 text-xl hover:bg-amber-300 dark:text-white dark:hover:bg-amber-600"
+			onclick={() => keymap.layers.push(keyboard.layouts[activeLayout].layout.map(() => 'KC_NO'))}
+		>
+			+
+		</button>
 	</div>
+	{#each [...Array(keymap?.layers.length).keys()].reverse() as i}
+		<TabButton onclick={() => (activeLayer = i)}>Layer {i}</TabButton>
+	{/each}
+</div>
 
+<div class="flex-colun flex justify-center">
 	<div class="relative" style:width="{(size + gap) * (maxX - minX + 1) - gap}px">
 		{#each keyboard.layouts[activeLayout].layout as key, i}
 			<div
