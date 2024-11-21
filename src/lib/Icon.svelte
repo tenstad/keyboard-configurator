@@ -1,12 +1,10 @@
 <script lang="ts">
 	import {
-		ArrowBigUp,
 		ArrowBigUpDash,
 		ArrowDown,
 		ArrowLeft,
 		ArrowRight,
 		ArrowUp,
-		ChevronUp,
 		Command,
 		CornerDownLeft,
 		Delete,
@@ -111,7 +109,7 @@
 	<VolumeOff {size} {strokeWidth} />
 {:else if label == 'LUCIDE_POWER_OFF'}
 	<PowerOff {size} {strokeWidth} />
-{:else if label == 'LUCIDE_SKIP_FORWARD'}
+{:else if label == 'LUCIDE_SKIP_BACK'}
 	<SkipBack {size} {strokeWidth} />
 {:else if label == 'LUCIDE_SKIP_FORWARD'}
 	<SkipForward {size} {strokeWidth} />
