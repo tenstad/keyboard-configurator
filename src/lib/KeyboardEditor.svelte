@@ -37,6 +37,7 @@
 		  }
 		| undefined;
 	let dragged = $state<Dragged>(undefined);
+	let newDragged = $state<string | undefined>(undefined);
 	let draggedOver = $state<Dragged>(undefined);
 
 	function handleDragStart(layer: number, index: number) {
@@ -60,6 +61,9 @@
 			let draggedKey = keymap.layers[dragged.layer][dragged.index];
 			keymap.layers[dragged.layer][dragged.index] = keymap.layers[layer][index];
 			keymap.layers[layer][index] = draggedKey;
+		} else if (newDragged !== undefined) {
+			keymap.layers[layer][index] = newDragged;
+			draggedOver = undefined;
 		}
 		activeLayer = layer;
 	}
@@ -193,11 +197,11 @@
 						draggable="true"
 						role="button"
 						tabindex={0}
-						ondragstart={() => {}}
-						ondragend={() => {}}
 						style:width="{size}px"
 						style:height="{size}px"
 						title={key}
+						ondragstart={() => (newDragged = key)}
+						ondragend={() => (newDragged = undefined)}
 					>
 						<LabelGroup
 							labelGroups={displayLabel(key).upper}
