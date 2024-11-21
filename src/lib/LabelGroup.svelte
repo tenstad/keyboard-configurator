@@ -8,7 +8,19 @@
 		isLower: boolean;
 		otherExists: boolean;
 	}>();
-	let labelGroup = $derived(labelGroups[index]);
+	let labelGroup = $derived(
+		labelGroups[index].every((label: Label) => 'icon' in label) && !isLower
+			? labelGroups[index].length > 3
+				? [
+						labelGroups[index][2],
+						labelGroups[index][3],
+						labelGroups[index][0],
+						labelGroups[index][1],
+						...labelGroups[index].slice(4)
+					]
+				: labelGroups[index].reverse()
+			: labelGroups[index]
+	);
 
 	let textLength = labelGroups
 		.flat()

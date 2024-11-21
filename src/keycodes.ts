@@ -1,4 +1,5 @@
 import keycodes_basic from './keycodes/keycodes_basic.js';
+import keycodes_modifiers from './keycodes/keycodes_modifiers.js';
 import keycodes_norwegian from './keycodes/keycodes_norwegian.js';
 import keycodes_us from './keycodes/keycodes_us.js';
 
@@ -19,45 +20,57 @@ type KeyDefinition = {
 let keyDefinitions: {
 	[_: string]: { [category: string]: { [group: string]: KeyDefinition[] } };
 } = {
-	press: {
+	keys: {
 		standard: {},
 		language: {}
 	},
-	modifier: {}
+	modifiers: {
+		standard: {}
+	}
 };
 
-function addKey(category: string, group: string, key: KeyDefinition) {
-	if (!(category in keyDefinitions.press)) {
-		keyDefinitions.press[category] = {};
+function addKey(defs: any, group: string, key: KeyDefinition) {
+	if (!(group in defs)) {
+		defs[group] = [];
 	}
-	if (!(group in keyDefinitions.press[category])) {
-		keyDefinitions.press[category][group] = [];
-	}
-	keyDefinitions.press[category][group].push(key);
+	defs[group].push(key);
 }
 
 Object.entries(keycodes_basic).forEach(([code, { group, key, label, aliases }]) =>
-	addKey('standard', group, { key, label, aliases, sendKey: undefined })
+	addKey(keyDefinitions.keys.standard, group, { key, label, aliases, sendKey: undefined })
 );
 Object.entries(keycodes_us).forEach(([sendKey, { key, label, aliases }]) =>
-	addKey('language', 'US', { key, label, aliases, sendKey })
+	addKey(keyDefinitions.keys.language, 'US', { key, label, aliases, sendKey })
 );
 Object.entries(keycodes_norwegian).forEach(([sendKey, { key, label }]) =>
-	addKey('language', 'NO', { key, label, aliases: [], sendKey })
+	addKey(keyDefinitions.keys.language, 'NO', { key, label, aliases: [], sendKey })
 );
 
-let knownKeys: { [_: string]: KeyCode } = Object.fromEntries(
-	Object.values(keyDefinitions.press)
-		.map((category) =>
-			Object.values(category).map((keys) =>
-				keys.map(({ aliases, key: fullKey, ...k }) =>
-					[...(aliases ?? []), fullKey].map((key) => [key, { ...k, key, fullKey }])
+Object.entries(keycodes_modifiers).map(([key, { keys, aliases }]) =>
+	addKey(keyDefinitions.modifiers.standard, 'tap', {
+		key,
+		keys,
+		label: `Hold ${keys.map((key) => key.label).join(', ')} and press`
+	})
+);
+
+let knownKeys: { [_: string]: { [_: string]: KeyCode } } = Object.fromEntries(
+	Object.entries(keyDefinitions).map(([type, categories]) => [
+		type,
+		Object.fromEntries(
+			Object.values(categories)
+				.map((category) =>
+					Object.values(category).map((keys) =>
+						keys.map(({ aliases, key: fullKey, ...k }) =>
+							[...(aliases ?? []), fullKey].map((key) => [key, { ...k, key, fullKey }])
+						)
+					)
 				)
-			)
+				.flat()
+				.flat()
+				.flat()
 		)
-		.flat()
-		.flat()
-		.flat()
+	])
 );
 
 export { keyDefinitions, knownKeys };
