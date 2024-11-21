@@ -43,6 +43,10 @@
 	}
 	function handleDragEnd(layer: number, index: number) {
 		dragged = undefined;
+		if (draggedOver === undefined) {
+			activeLayer = layer;
+		}
+		draggedOver = undefined;
 	}
 	function handleDragOver(layer: number, index: number) {
 		draggedOver = { layer, index };
@@ -56,7 +60,7 @@
 			keymap.layers[dragged.layer][dragged.index] = keymap.layers[layer][index];
 			keymap.layers[layer][index] = draggedKey;
 		}
-		draggedOver = undefined;
+		activeLayer = layer;
 	}
 </script>
 
@@ -78,14 +82,22 @@
 			</button>
 		</div>
 		{#each [...Array(keymap?.layers.length).keys()].reverse() as i}
-			<TabButton active={i == activeLayer} onclick={() => (activeLayer = i)}>Layer {i}</TabButton>
+			<TabButton
+				active={i == activeLayer}
+				onclick={() => (activeLayer = i)}
+				ondragover={() => {
+					if (dragged !== undefined) {
+						activeLayer = i;
+					}
+				}}>Layer {i}</TabButton
+			>
 		{/each}
 	</div>
 	<div class="flex grow flex-row justify-center">
 		<div class="flex flex-col justify-center">
-			{#each [activeLayer].reverse() as layer}
+			{#each [...Array(layers.length).keys()].reverse() as layer}
 				<div
-					class="relative"
+					class="{layer != activeLayer ? 'hidden' : ''} relative"
 					style:width="{(size + gap) * (maxX - minX + 1) - gap}px"
 					style:height="{(size + gap) * (maxY - minY + 1) - gap}px"
 				>
