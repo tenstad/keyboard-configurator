@@ -174,7 +174,7 @@
 		{/each}
 	</div>
 </div>
-{#each Object.entries(keyDefinitions.press) as [category, groups]}
+{#each Object.entries(keyDefinitions.keys) as [category, groups]}
 	<!-- <h2 class="text-3xl text-neutral-800 dark:text-neutral-100">{category}</h2> -->
 	{#each Object.entries(groups) as [group, keys]}
 		<div class="flex-rows mx-1 my-5 flex">
