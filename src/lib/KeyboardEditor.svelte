@@ -78,7 +78,7 @@
 			</button>
 		</div>
 		{#each [...Array(keymap?.layers.length).keys()].reverse() as i}
-			<TabButton onclick={() => (activeLayer = i)}>Layer {i}</TabButton>
+			<TabButton active={i == activeLayer} onclick={() => (activeLayer = i)}>Layer {i}</TabButton>
 		{/each}
 	</div>
 	<div class="flex grow flex-row justify-center">
