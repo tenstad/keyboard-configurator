@@ -11,7 +11,7 @@ type TextLabel = {
 };
 type IconLabel = {
 	icon: string;
-	text: string | undefined;
+	text?: string;
 };
 
 function key(raw: string): Label[][] {
@@ -77,7 +77,7 @@ function keyCombo(raw: string): KeyCombo {
 
 	if (outer !== undefined) {
 		if (outer.endsWith('_T')) {
-			lower = mod(outer.slice(0, outer.length - 2)) ?? key(outer);
+			lower = mod(outer) ?? key(outer);
 		} else if (outer == 'MT' && outerParam !== undefined) {
 			let mods = outerParam.split('|').map((p) => p.slice(4));
 			if (mods.every((p) => p in knownKeys.modifiers)) {
@@ -135,6 +135,7 @@ function splitLabel(label: string): string[] {
 }
 
 const abbreviations = {
+	KC_NO: ' ',
 	KC_DELETE: 'Del',
 	KC_PAGE_UP: 'PgUp',
 	KC_PAGE_DOWN: 'PgDn',

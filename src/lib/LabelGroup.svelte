@@ -44,7 +44,7 @@
 					: otherExists
 						? [24, 22, 17, 17][labelGroup.length - 1] - (labelGroup.length - 1) * 1 // upper when lower
 						: labelGroups.length == 1 // upper only
-							? 28 // icon only
+							? [28, 24, 18, 18][labelGroup.length - 1] // icon only
 							: textLength > 1 // icon group next to text
 								? 13 // < multiple letters / v single letter
 								: [24, 18, 14, 13][labelGroup.length - 1]}
