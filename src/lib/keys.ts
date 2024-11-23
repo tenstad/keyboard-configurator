@@ -142,6 +142,7 @@ function keyCombo(raw: string): KeyCombo {
 			upper = mod(params[0].value);
 		} else if (value in knownKeys.modifiers && params.length == 1) {
 			upper = [...(keymod(value) ?? rawkey(value)), ...upper];
+			lower = undefined;
 		} else {
 			upper = key(params.map(({ raw }) => raw).join(','));
 		}
