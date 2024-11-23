@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { keyDefinitions } from '../keycodes';
+	import Key from './Key.svelte';
 	import { displayLabel, type KeyCombo } from './keys';
 	import LabelGroup from './LabelGroup.svelte';
 	import TabButton from './TabButton.svelte';
@@ -158,15 +159,7 @@
 								ondragstart={() => handleDragStart(layer, index)}
 								ondragend={() => handleDragEnd(layer, index)}
 							>
-								{#each [[layers[layer][index].upper, false, layers[layer][index].lower != undefined], [layers[layer][index].lower, true, layers[layer][index].upper != undefined]] as [labelGroups, isLower, otherExists]}
-									{#if labelGroups !== undefined}
-										<div class="flex flex-row items-center gap-1">
-											{#each labelGroups as labelGroup, i}
-												<LabelGroup {labelGroups} index={i} {isLower} {otherExists} />
-											{/each}
-										</div>
-									{/if}
-								{/each}
+								<Key key={layers[layer][index]} />
 							</div>
 						</div>
 					</div>
@@ -206,43 +199,7 @@
 							ondragstart={() => (newDragged = key)}
 							ondragend={() => (newDragged = undefined)}
 						>
-							{#if group == 'mod-tap'}
-								<LabelGroup
-									labelGroups={displayLabel('KC_NO').upper}
-									index={0}
-									isLower={false}
-									otherExists={true}
-								/>
-								<LabelGroup
-									labelGroups={displayLabel(key + '(KC_NO)').lower}
-									index={0}
-									isLower={true}
-									otherExists={true}
-								/>
-							{:else if group == 'mod'}
-								<LabelGroup
-									labelGroups={displayLabel(key + '(KC_NO)').upper}
-									index={0}
-									isLower={false}
-									otherExists={false}
-								/>
-							{:else if group == 'osm'}
-								<LabelGroup
-									labelGroups={displayLabel(
-										key + '(' + k.mods.map(({ mod }) => mod).join('|') + ')'
-									).upper}
-									index={0}
-									isLower={false}
-									otherExists={true}
-								/>
-							{:else}
-								<LabelGroup
-									labelGroups={displayLabel(key).upper}
-									index={0}
-									isLower={false}
-									otherExists={false}
-								/>
-							{/if}
+							<Key key={displayLabel(k.preview)} />
 						</div>
 					{/each}
 				</div>

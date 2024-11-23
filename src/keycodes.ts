@@ -15,6 +15,7 @@ type KeyDefinition = {
 	label: string; // Label such as 'A' or 'Spacebar'
 	aliases: string[]; // Aliases of key
 	sendKey: string | undefined; // Actual keycode to send for custom language key
+	preview: string;
 };
 
 let keyDefinitions: {
@@ -39,13 +40,19 @@ function addKey(defs: any, group: string, key: KeyDefinition) {
 }
 
 Object.entries(keycodes_basic).forEach(([code, { group, key, label, aliases }]) =>
-	addKey(keyDefinitions.keys.standard, group, { key, label, aliases, sendKey: undefined })
+	addKey(keyDefinitions.keys.standard, group, {
+		key,
+		preview: key,
+		label,
+		aliases,
+		sendKey: undefined
+	})
 );
 Object.entries(keycodes_us).forEach(([sendKey, { key, label, aliases }]) =>
-	addKey(keyDefinitions.keys.language, 'US', { key, label, aliases, sendKey })
+	addKey(keyDefinitions.keys.language, 'US', { key, preview: key, label, aliases, sendKey })
 );
 Object.entries(keycodes_norwegian).forEach(([sendKey, { key, label }]) =>
-	addKey(keyDefinitions.keys.language, 'NO', { key, label, aliases: [], sendKey })
+	addKey(keyDefinitions.keys.language, 'NO', { key, preview: key, label, aliases: [], sendKey })
 );
 
 Object.entries(keycodes_modifiers).forEach(([key, { group, keys, aliases, parameters }]) => {
@@ -53,6 +60,7 @@ Object.entries(keycodes_modifiers).forEach(([key, { group, keys, aliases, parame
 		parameters.forEach(({ mods }) => {
 			addKey(keyDefinitions.modifiers.standard, group, {
 				key,
+				preview: key + '(' + mods.map(({ mod }) => mod).join('|') + ')',
 				mods,
 				aliases
 				// label: `Hold ${keys.map((key) => key.label).join(', ')} and press`
@@ -61,6 +69,7 @@ Object.entries(keycodes_modifiers).forEach(([key, { group, keys, aliases, parame
 	} else {
 		addKey(keyDefinitions.modifiers.standard, group, {
 			key,
+			preview: key + '(KC_NO)',
 			keys,
 			aliases
 			// label: `Hold ${keys.map((key) => key.label).join(', ')} and press`
