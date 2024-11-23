@@ -78,12 +78,21 @@ function keyCombo(raw: string): KeyCombo {
 		if (outer.endsWith('_T')) {
 			lower = mod(outer.slice(0, outer.length - 2)) ?? key(outer);
 		} else if (outer == 'MT' && outerParam !== undefined) {
-			let outerParams = outerParam.split('|').map((p) => p.slice(4));
-			if (outerParams.every((p) => p in knownKeys.modifiers)) {
-				lower = outerParams.map((p) => mod(p)).flat();
+			let mods = outerParam.split('|').map((p) => p.slice(4));
+			if (mods.every((p) => p in knownKeys.modifiers)) {
+				lower = mods.map((p) => mod(p)).flat();
 			} else {
 				lower = key(outer);
 			}
+		} else if (outer == 'LM' && outerParam !== undefined) {
+			let mods = inner.split('|').map((p) => p.slice(4));
+			if (mods.every((p) => p in knownKeys.modifiers)) {
+				lower = mods.map((p) => mod(p)).flat();
+			} else {
+				lower = key(outer + ' ' + outerParam);
+			}
+			upper = [[{ text: ' ', type: 'raw' }]];
+			lower = [...lower, [{ icon: 'LUCIDE_LAYERS_2' }], [{ text: outerParam, type: 'text' }]];
 		} else if (outer == 'LT') {
 			lower = [[{ icon: 'LUCIDE_LAYERS_2' }], [{ text: outerParam, type: 'text' }]];
 		} else if (['MO', 'TG', 'TO', 'TT', 'DF', 'OSL'].includes(outer)) {

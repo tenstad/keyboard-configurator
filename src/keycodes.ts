@@ -47,7 +47,7 @@ Object.entries(keycodes_norwegian).forEach(([sendKey, { key, label }]) =>
 );
 
 Object.entries(keycodes_modifiers).map(([key, { keys, aliases }]) =>
-	addKey(keyDefinitions.modifiers.standard, 'tap', {
+	addKey(keyDefinitions.modifiers.standard, 'mod-tap', {
 		key,
 		keys,
 		label: `Hold ${keys.map((key) => key.label).join(', ')} and press`
