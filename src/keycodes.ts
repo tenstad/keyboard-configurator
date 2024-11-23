@@ -26,7 +26,8 @@ let keyDefinitions: {
 		language: {}
 	},
 	modifiers: {
-		standard: {}
+		standard: {},
+		layers: {}
 	}
 };
 
@@ -75,6 +76,28 @@ Object.entries(keycodes_modifiers).forEach(([key, { group, keys, aliases, parame
 			// label: `Hold ${keys.map((key) => key.label).join(', ')} and press`
 		});
 	}
+});
+
+[...Array(16).keys()].forEach((layer) => {
+	addKey(keyDefinitions.modifiers.layers, 'LT', {
+		key: 'LT',
+		preview: 'LT' + '(' + layer + ', KC_NO)',
+		label: 'LT' + ' ' + layer,
+		aliases: [],
+		sendKey: undefined
+	});
+});
+
+['MO', 'TG', 'TO', 'TT', 'DF', 'OSL'].forEach((key) => {
+	[...Array(16).keys()].forEach((layer) => {
+		addKey(keyDefinitions.modifiers.layers, key, {
+			key,
+			preview: key + '(' + layer + ')',
+			label: key + ' ' + layer,
+			aliases: [],
+			sendKey: undefined
+		});
+	});
 });
 
 let knownKeys: { [_: string]: { [_: string]: KeyCode } } = Object.fromEntries(
