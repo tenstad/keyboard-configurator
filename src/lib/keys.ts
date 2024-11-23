@@ -1,4 +1,4 @@
-import { knownKeys } from '../keycodes';
+import { knownKeys, knownModifiers } from '../keycodes';
 
 type KeyCombo = {
 	upper: Label[][];
@@ -38,15 +38,34 @@ function key(raw: string): Label[][] {
 	return [[{ text, type: 'text' }]];
 }
 
-function mod(raw: string): Label[][] | undefined {
-	if (!(raw in knownKeys.modifiers)) {
-		return undefined;
+function keymod(raw: string): Label[][] | undefined {
+	if (raw in knownKeys.modifiers) {
+		return [
+			knownKeys.modifiers[raw].keys.map(({ key }) => ({
+				icon: icons.modifiers[key]
+			}))
+		];
 	}
 
+	return undefined;
+}
+
+function mod(raw: string): Label[][] {
 	return [
-		knownKeys.modifiers[raw].keys.map(({ key }) => ({
-			icon: icons.modifiers[key]
-		}))
+		raw
+			.split('|')
+			.map((mod) => {
+				if (mod in knownModifiers) {
+					return [
+						knownModifiers[mod].keys.map(({ key }) => ({
+							icon: icons.modifiers[key]
+						}))
+					];
+				}
+				return key(mod);
+			})
+			.flat()
+			.flat()
 	];
 }
 
@@ -77,33 +96,22 @@ function keyCombo(raw: string): KeyCombo {
 
 	if (outer !== undefined) {
 		if (outer.endsWith('_T')) {
-			lower = mod(outer) ?? key(outer);
+			lower = keymod(outer) ?? key(outer);
 		} else if (outer == 'MT' && outerParam !== undefined) {
-			let mods = outerParam.split('|').map((p) => p.slice(4));
-			if (mods.every((p) => p in knownKeys.modifiers)) {
-				lower = mods.map((p) => mod(p)).flat();
-			} else {
-				lower = key(outer);
-			}
+			lower = mod(outerParam);
 		} else if (outer == 'LM' && outerParam !== undefined) {
-			let mods = inner.split('|').map((p) => p.slice(4));
-			if (mods.every((p) => p in knownKeys.modifiers)) {
-				upper = mods.map((p) => mod(p)).flat();
-			} else {
-				upper = key(outer + ' ' + outerParam);
-			}
-			upper = [...upper, [{ icon: 'LUCIDE_LAYERS_2_OPEN', text: outerParam }]];
-			// lower = [[{ text: 'LM', type: 'raw' }]];
+			upper = [...mod(inner), [{ icon: 'LUCIDE_LAYERS_2_OPEN', text: outerParam }]];
+			lower = [[{ text: 'LM', type: 'raw' }]];
 		} else if (outer == 'LT') {
 			lower = [[{ icon: 'LUCIDE_LAYERS_2' }], [{ text: outerParam, type: 'text' }]];
 		} else if (['MO', 'TG', 'TO', 'TT', 'DF', 'OSL'].includes(outer)) {
 			upper = [[{ icon: 'LUCIDE_LAYERS_2' }], [{ text: inner, type: 'text' }]];
 			lower = [[{ text: outer, type: 'raw' }]];
 		} else if (outer == 'OSM') {
-			upper = mod(inner.slice(4)) ?? key(inner);
+			upper = mod(inner);
 			lower = [[{ text: outer, type: 'raw' }]];
 		} else if (outer in knownKeys.modifiers) {
-			upper = [...mod(outer), ...upper];
+			upper = [...(keymod(outer) ?? key(outer)), ...upper];
 		} else {
 			lower = [[{ text: outer, type: 'raw' }]];
 		}

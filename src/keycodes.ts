@@ -1,5 +1,5 @@
 import keycodes_basic from './keycodes/keycodes_basic.js';
-import keycodes_modifiers from './keycodes/keycodes_modifiers.js';
+import { keycodes_modifiers, modifiers } from './keycodes/keycodes_modifiers.js';
 import keycodes_norwegian from './keycodes/keycodes_norwegian.js';
 import keycodes_us from './keycodes/keycodes_us.js';
 
@@ -29,6 +29,8 @@ let keyDefinitions: {
 	}
 };
 
+let knownModifiers = modifiers;
+
 function addKey(defs: any, group: string, key: KeyDefinition) {
 	if (!(group in defs)) {
 		defs[group] = [];
@@ -46,14 +48,25 @@ Object.entries(keycodes_norwegian).forEach(([sendKey, { key, label }]) =>
 	addKey(keyDefinitions.keys.language, 'NO', { key, label, aliases: [], sendKey })
 );
 
-Object.entries(keycodes_modifiers).map(([key, { group, keys, aliases }]) =>
-	addKey(keyDefinitions.modifiers.standard, group, {
-		key,
-		keys,
-		aliases,
-		label: `Hold ${keys.map((key) => key.label).join(', ')} and press`
-	})
-);
+Object.entries(keycodes_modifiers).forEach(([key, { group, keys, aliases, parameters }]) => {
+	if (parameters !== undefined) {
+		parameters.forEach(({ mods }) => {
+			addKey(keyDefinitions.modifiers.standard, group, {
+				key,
+				mods,
+				aliases
+				// label: `Hold ${keys.map((key) => key.label).join(', ')} and press`
+			});
+		});
+	} else {
+		addKey(keyDefinitions.modifiers.standard, group, {
+			key,
+			keys,
+			aliases
+			// label: `Hold ${keys.map((key) => key.label).join(', ')} and press`
+		});
+	}
+});
 
 let knownKeys: { [_: string]: { [_: string]: KeyCode } } = Object.fromEntries(
 	Object.entries(keyDefinitions).map(([type, categories]) => [
@@ -74,5 +87,5 @@ let knownKeys: { [_: string]: { [_: string]: KeyCode } } = Object.fromEntries(
 	])
 );
 
-export { keyDefinitions, knownKeys };
+export { keyDefinitions, knownModifiers, knownKeys };
 export type { KeyCode };

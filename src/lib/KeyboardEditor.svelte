@@ -189,7 +189,7 @@
 					</h2>
 				</div>
 				<div class="grid w-full gap-1" style:grid-template-columns="repeat(auto-fit, {size}px)">
-					{#each keys as { key }}
+					{#each keys as { key, ...k }}
 						<div
 							class={(false
 								? 'bg-amber-300 dark:bg-amber-600 dark:text-white '
@@ -224,6 +224,15 @@
 									index={0}
 									isLower={false}
 									otherExists={false}
+								/>
+							{:else if group == 'osm'}
+								<LabelGroup
+									labelGroups={displayLabel(
+										key + '(' + k.mods.map(({ mod }) => mod).join('|') + ')'
+									).upper}
+									index={0}
+									isLower={false}
+									otherExists={true}
 								/>
 							{:else}
 								<LabelGroup
