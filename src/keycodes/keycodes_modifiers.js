@@ -253,7 +253,7 @@ let keycodes_modifiers = {
 		keys: [keys.KC_LEFT_CTRL, keys.KC_LEFT_SHIFT, keys.KC_LEFT_ALT, keys.KC_LEFT_GUI]
 	},
 	OSM: {
-		group: 'osm',
+		group: 'OSM',
 		parameters: [
 			{
 				label: 'LSFT',
