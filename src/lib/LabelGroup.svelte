@@ -24,13 +24,16 @@
 
 	let textLength = labelGroups
 		.flat()
-		.map((label: Label) => ('text' in label ? label.text.length : 0))
+		.map((label: Label) => ('text' in label && !('icon' in label) ? label.text.length : 0))
 		.reduce((acc: number, x: number) => acc + x, 0);
 </script>
 
 <div
-	class={(isLower ? 'grid-flow-col' : labelGroup.length > 3 ? 'grid-cols-2' : 'grid-cols-1') +
-		' grid items-center justify-items-center'}
+	class={(isLower || (otherExists && labelGroup.length < 4)
+		? 'grid-flow-col'
+		: labelGroup.length > 3
+			? 'grid-cols-2'
+			: 'grid-cols-1') + ' relative grid items-center justify-items-center'}
 >
 	{#each labelGroup as label}
 		{#if 'icon' in label}
@@ -39,15 +42,23 @@
 				size={isLower
 					? [18, 18, 14, 13][labelGroup.length - 1] // lower
 					: otherExists
-						? 24 // upper when lower
+						? [24, 22, 17, 17][labelGroup.length - 1] - (labelGroup.length - 1) * 1 // upper when lower
 						: labelGroups.length == 1 // upper only
 							? 28 // icon only
 							: textLength > 1 // icon group next to text
 								? 13 // < multiple letters / v single letter
 								: [24, 18, 14, 13][labelGroup.length - 1]}
 			/>
-		{/if}
-		{#if 'text' in label}
+			{#if 'text' in label}
+				<span
+					class="{label.text.length > 1
+						? '-ml-[0.25rem] text-sm -tracking-[0.175em]'
+						: 'text-md'} absolute -mt-3"
+				>
+					{label.text}
+				</span>
+			{/if}
+		{:else if 'text' in label}
 			<span
 				class="{{
 					text: '',

@@ -174,44 +174,47 @@
 		{/each}
 	</div>
 </div>
-{#each Object.entries(keyDefinitions.keys) as [category, groups]}
-	<!-- <h2 class="text-3xl text-neutral-800 dark:text-neutral-100">{category}</h2> -->
-	{#each Object.entries(groups) as [group, keys]}
-		<div class="flex-rows mx-1 my-5 flex">
-			<div class="pt-1">
-				<h2 class="w-48 px-4 text-right text-sm text-neutral-800 dark:text-neutral-100">
-					{category}
-				</h2>
-				<h2 class="w-48 px-4 text-right text-2xl text-neutral-800 dark:text-neutral-100">
-					{group}
-				</h2>
+{#each Object.entries(keyDefinitions) as [type, categories]}
+	{#each Object.entries(categories) as [category, groups]}
+		<!-- <h2 class="text-3xl text-neutral-800 dark:text-neutral-100">{category}</h2> -->
+		{#each Object.entries(groups) as [group, keys]}
+			<div class="flex-rows mx-1 my-5 flex">
+				<div class="pt-1">
+					<h2 class="w-48 px-4 text-right text-sm text-neutral-800 dark:text-neutral-100">
+						{category}
+						{type}
+					</h2>
+					<h2 class="w-48 px-4 text-right text-2xl text-neutral-800 dark:text-neutral-100">
+						{group}
+					</h2>
+				</div>
+				<div class="grid w-full gap-1" style:grid-template-columns="repeat(auto-fit, {size}px)">
+					{#each keys as { key }}
+						<div
+							class={(false
+								? 'bg-amber-300 dark:bg-amber-600 dark:text-white '
+								: 'bg-white text-neutral-800 hover:bg-amber-300 hover:text-black' +
+									' dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-amber-600 dark:hover:text-white') +
+								' flex h-full w-full flex-col items-center justify-center rounded-md text-center'}
+							draggable="true"
+							role="button"
+							tabindex={0}
+							style:width="{size}px"
+							style:height="{size}px"
+							title={key}
+							ondragstart={() => (newDragged = key)}
+							ondragend={() => (newDragged = undefined)}
+						>
+							<LabelGroup
+								labelGroups={displayLabel(key).upper}
+								index={0}
+								isLower={false}
+								otherExists={false}
+							/>
+						</div>
+					{/each}
+				</div>
 			</div>
-			<div class="grid w-full gap-1" style:grid-template-columns="repeat(auto-fit, {size}px)">
-				{#each keys as { key }}
-					<div
-						class={(false
-							? 'bg-amber-300 dark:bg-amber-600 dark:text-white '
-							: 'bg-white text-neutral-800 hover:bg-amber-300 hover:text-black' +
-								' dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-amber-600 dark:hover:text-white') +
-							' flex h-full w-full flex-col items-center justify-center rounded-md text-center'}
-						draggable="true"
-						role="button"
-						tabindex={0}
-						style:width="{size}px"
-						style:height="{size}px"
-						title={key}
-						ondragstart={() => (newDragged = key)}
-						ondragend={() => (newDragged = undefined)}
-					>
-						<LabelGroup
-							labelGroups={displayLabel(key).upper}
-							index={0}
-							isLower={false}
-							otherExists={false}
-						/>
-					</div>
-				{/each}
-			</div>
-		</div>
+		{/each}
 	{/each}
 {/each}
