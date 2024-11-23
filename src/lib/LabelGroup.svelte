@@ -25,7 +25,7 @@
 	let textLength = labelGroups
 		.flat()
 		.map((label: Label) => ('text' in label ? label.text.length : 0))
-		.reduce((acc: number, x: number) => acc + x);
+		.reduce((acc: number, x: number) => acc + x, 0);
 </script>
 
 <div
