@@ -11,6 +11,7 @@ type TextLabel = {
 };
 type IconLabel = {
 	icon: string;
+	text: string | undefined;
 };
 
 function key(raw: string): Label[][] {
@@ -87,12 +88,12 @@ function keyCombo(raw: string): KeyCombo {
 		} else if (outer == 'LM' && outerParam !== undefined) {
 			let mods = inner.split('|').map((p) => p.slice(4));
 			if (mods.every((p) => p in knownKeys.modifiers)) {
-				lower = mods.map((p) => mod(p)).flat();
+				upper = mods.map((p) => mod(p)).flat();
 			} else {
-				lower = key(outer + ' ' + outerParam);
+				upper = key(outer + ' ' + outerParam);
 			}
-			upper = [[{ text: ' ', type: 'raw' }]];
-			lower = [...lower, [{ icon: 'LUCIDE_LAYERS_2' }], [{ text: outerParam, type: 'text' }]];
+			upper = [...upper, [{ icon: 'LUCIDE_LAYERS_2_OPEN', text: outerParam }]];
+			// lower = [[{ text: 'LM', type: 'raw' }]];
 		} else if (outer == 'LT') {
 			lower = [[{ icon: 'LUCIDE_LAYERS_2' }], [{ text: outerParam, type: 'text' }]];
 		} else if (['MO', 'TG', 'TO', 'TT', 'DF', 'OSL'].includes(outer)) {

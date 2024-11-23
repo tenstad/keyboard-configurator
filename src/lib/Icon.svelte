@@ -34,7 +34,41 @@
 </script>
 
 {#if label == 'LUCIDE_LAYERS_2'}
-	<Layers2 {size} {strokeWidth} />
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width={strokeWidth}
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		class="lucide lucide-layers-2"
+		><path
+			d="m 21.692 12.5 l 0.777 0.702 a 1 1 0 0 1 0 1.74 L 13.029 22.65 a 2 2 0 0 1 -2 0 l -9.496 -7.78 a 1 1 0 0 1 0 -1.74 L 2.3 12.435"
+		/><path
+			d="M 13 18.74 a 2 2 0 0 1 -2 0 L 1.544 10.906 a 1 1 0 0 1 0 -1.74 L 11 1.26 a 2 2 0 0 1 2 0 l 9.449 7.847 a 1 1 0 0 1 0 1.74 Z"
+		/></svg
+	>
+{:else if label == 'LUCIDE_LAYERS_2_OPEN'}
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width={strokeWidth}
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		class="lucide lucide-layers-2"
+		><path
+			d="m 21.684 12.447 l 0.777 0.702 a 1 1 0 0 1 0 1.74 L 12.991 22.341 a 2 2 0 0 1 -2 0 l -9.47 -7.483 a 1 1 0 0 1 0 -1.74 L 2.3 12.435"
+		/><path
+			d="m 20.357 7.142 l 2.056 1.975 a 1 1 0 0 1 0 1.74 L 13 18.593 a 2 2 0 0 1 -2 0 l -9.48 -7.759 a 1 1 0 0 1 0 -1.74 L 3.563 7.095"
+		/></svg
+	>
 {:else if label == 'LUCIDE_COMMAND'}
 	<Command {size} {strokeWidth} />
 {:else if label == 'LUCIDE_CHEVRON_UP'}
