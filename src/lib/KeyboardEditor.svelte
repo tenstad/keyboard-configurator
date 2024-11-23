@@ -205,12 +205,34 @@
 							ondragstart={() => (newDragged = key)}
 							ondragend={() => (newDragged = undefined)}
 						>
-							<LabelGroup
-								labelGroups={displayLabel(key).upper}
-								index={0}
-								isLower={false}
-								otherExists={false}
-							/>
+							{#if group == 'mod-tap'}
+								<LabelGroup
+									labelGroups={displayLabel('KC_NO').upper}
+									index={0}
+									isLower={false}
+									otherExists={true}
+								/>
+								<LabelGroup
+									labelGroups={displayLabel(key + '(KC_NO)').lower}
+									index={0}
+									isLower={true}
+									otherExists={true}
+								/>
+							{:else if group == 'mod'}
+								<LabelGroup
+									labelGroups={displayLabel(key + '(KC_NO)').upper}
+									index={0}
+									isLower={false}
+									otherExists={false}
+								/>
+							{:else}
+								<LabelGroup
+									labelGroups={displayLabel(key).upper}
+									index={0}
+									isLower={false}
+									otherExists={false}
+								/>
+							{/if}
 						</div>
 					{/each}
 				</div>
