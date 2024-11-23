@@ -27,7 +27,52 @@ let keys = Object.fromEntries(
 	}).map(([key, k]) => [key, { ...k, key }])
 );
 
-export default {
+let modifiers = Object.fromEntries(
+	Object.entries({
+		MOD_LCTL: {
+			label: 'Left Control',
+			keys: [keys.KC_LEFT_CTRL]
+		},
+		MOD_LSFT: {
+			label: 'Left Shift',
+			keys: [keys.KC_LEFT_SHIFT]
+		},
+		MOD_LALT: {
+			label: 'Left Alt',
+			keys: [keys.KC_LEFT_ALT]
+		},
+		MOD_LGUI: {
+			label: 'Left GUI (Windows/Command/Meta key)',
+			keys: [keys.KC_LEFT_GUI]
+		},
+		MOD_RCTL: {
+			label: 'Right Control',
+			keys: [keys.KC_RIGHT_CTRL]
+		},
+		MOD_RSFT: {
+			label: 'Right Shift',
+			keys: [keys.KC_RIGHT_SHIFT]
+		},
+		MOD_RALT: {
+			label: 'Right Alt (AltGr)',
+			keys: [keys.KC_RIGHT_ALT]
+		},
+		MOD_RGUI: {
+			label: 'Right GUI (Windows/Command/Meta key)',
+			keys: [keys.KC_RIGHT_GUI]
+		},
+		MOD_HYPR: {
+			label: 'Hyper (Left Control, Shift, Alt and GUI)',
+			keys: [keys.KC_LEFT_CTRL, keys.KC_LEFT_SHIFT, keys.KC_LEFT_ALT, keys.KC_LEFT_GUI]
+		},
+		MOD_MEH: {
+			label: 'Meh (Left Control, Shift, and Alt)',
+			keys: [keys.KC_LEFT_CTRL, keys.KC_LEFT_SHIFT, keys.KC_LEFT_ALT]
+		}
+	}).map(([mod, k]) => [mod, { ...k, mod }])
+);
+
+let keycodes_modifiers = {
 	LCTL_T: {
 		group: 'mod-tap',
 		keys: [keys.KC_LEFT_CTRL],
@@ -206,5 +251,124 @@ export default {
 	HYPR: {
 		group: 'mod',
 		keys: [keys.KC_LEFT_CTRL, keys.KC_LEFT_SHIFT, keys.KC_LEFT_ALT, keys.KC_LEFT_GUI]
+	},
+	OSM: {
+		group: 'osm',
+		parameters: [
+			{
+				label: 'LSFT',
+				mods: [modifiers.MOD_LSFT]
+			},
+			{
+				label: 'LCTL',
+				mods: [modifiers.MOD_LCTL]
+			},
+			{
+				label: 'LALT',
+				mods: [modifiers.MOD_LALT]
+			},
+			{
+				label: 'LGUI',
+				mods: [modifiers.MOD_LGUI]
+			},
+			{
+				label: 'RSFT',
+				mods: [modifiers.MOD_RSFT]
+			},
+			{
+				label: 'RCTL',
+				mods: [modifiers.MOD_RCTL]
+			},
+			{
+				label: 'RALT',
+				mods: [modifiers.MOD_RALT]
+			},
+			{
+				label: 'RGUI',
+				mods: [modifiers.MOD_RGUI]
+			},
+			{
+				label: 'CS',
+				mods: [modifiers.MOD_LCTL, modifiers.MOD_LSFT]
+			},
+			{
+				label: 'CA',
+				mods: [modifiers.MOD_LCTL, modifiers.MOD_LALT]
+			},
+			{
+				label: 'CG',
+				mods: [modifiers.MOD_LCTL, modifiers.MOD_LGUI]
+			},
+			{
+				label: 'SA',
+				mods: [modifiers.MOD_LSFT, modifiers.MOD_LALT]
+			},
+			{
+				label: 'SG',
+				mods: [modifiers.MOD_LSFT, modifiers.MOD_LGUI]
+			},
+			{
+				label: 'AG',
+				mods: [modifiers.MOD_LALT, modifiers.MOD_LGUI]
+			},
+			{
+				label: 'RCS',
+				mods: [modifiers.MOD_RCTL, modifiers.MOD_RSFT]
+			},
+			{
+				label: 'RCA',
+				mods: [modifiers.MOD_RCTL, modifiers.MOD_RALT]
+			},
+			{
+				label: 'RCG',
+				mods: [modifiers.MOD_RCTL, modifiers.MOD_RGUI]
+			},
+			{
+				label: 'RSA',
+				mods: [modifiers.MOD_RSFT, modifiers.MOD_RALT]
+			},
+			{
+				label: 'RSG',
+				mods: [modifiers.MOD_RSFT, modifiers.MOD_RGUI]
+			},
+			{
+				label: 'RAG',
+				mods: [modifiers.MOD_RALT, modifiers.MOD_RGUI]
+			},
+			{
+				label: 'CSG',
+				mods: [modifiers.MOD_LCTL, modifiers.MOD_LSFT, modifiers.MOD_LGUI]
+			},
+			{
+				label: 'CAG',
+				mods: [modifiers.MOD_LCTL, modifiers.MOD_LALT, modifiers.MOD_LGUI]
+			},
+			{
+				label: 'SAG',
+				mods: [modifiers.MOD_LSFT, modifiers.MOD_LALT, modifiers.MOD_LGUI]
+			},
+			{
+				label: 'RCSG',
+				mods: [modifiers.MOD_RCTL, modifiers.MOD_RSFT, modifiers.MOD_RGUI]
+			},
+			{
+				label: 'RCAG',
+				mods: [modifiers.MOD_RCTL, modifiers.MOD_RALT, modifiers.MOD_RGUI]
+			},
+			{
+				label: 'RSAG',
+				mods: [modifiers.MOD_RSFT, modifiers.MOD_RALT, modifiers.MOD_RGUI]
+			},
+			{
+				label: 'Meh',
+				mods: [modifiers.MOD_MEH]
+			},
+			{
+				label: 'Hyper',
+				mods: [modifiers.MOD_HYPR]
+			}
+		]
 	}
 };
+
+export { keycodes_modifiers, modifiers };
