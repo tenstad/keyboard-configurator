@@ -3,6 +3,7 @@ import { knownKeys, knownModifiers } from '../keycodes';
 type KeyCombo = {
 	upper: Label[][];
 	lower: Label[][] | undefined;
+	parsed: PageServerData;
 };
 type Label = TextLabel | IconLabel;
 type TextLabel = {
@@ -13,17 +14,26 @@ type IconLabel = {
 	icon: string;
 	text?: string;
 };
+type Parsed = {
+	raw: string;
+	value: string;
+	params: any[];
+};
+
+function rawkey(raw: string): Label[][] {
+	return [
+		[
+			{
+				text: raw,
+				type: 'raw'
+			}
+		]
+	];
+}
 
 function key(raw: string): Label[][] {
 	if (!(raw in knownKeys.keys)) {
-		return [
-			[
-				{
-					text: raw,
-					type: 'raw'
-				}
-			]
-		];
+		return rawkey(raw);
 	}
 
 	let key = knownKeys.keys[raw].fullKey ?? raw;
@@ -62,7 +72,7 @@ function mod(raw: string): Label[][] {
 						}))
 					];
 				}
-				return key(mod);
+				return rawkey(mod);
 			})
 			.flat()
 			.flat()
@@ -76,47 +86,67 @@ function mod(raw: string): Label[][] {
 // lighting
 // ctrl + insert, alt + lshift
 
-function keyCombo(raw: string): KeyCombo {
+function parse(raw: string): Parsed {
 	raw = raw.replaceAll(' ', '');
-	let inner = raw;
-	let outer = undefined;
-	let outerParam = undefined;
-	if (inner.includes('(')) {
-		if (inner.includes(',')) {
-			outer = inner.split(',')[0];
-			inner = inner.slice(outer.length + 1, inner.length - 1);
-			[outer, outerParam] = outer.split('(');
-		} else {
-			outer = inner.split('(')[0];
-			inner = inner.slice(outer.length + 1, inner.length - 1);
+
+	let value = raw;
+	let params = [];
+	let paramStart = 0;
+	let depth = -1;
+	for (let i = 0; i < raw.length; i++) {
+		if (raw[i] === '(' && depth === -1) {
+			value = raw.slice(paramStart, i);
+			paramStart = i + 1;
+		}
+
+		if ((raw[i] === ',' || raw[i] === ')') && depth === 0) {
+			params.push(parse(raw.slice(paramStart, i)));
+			paramStart = i + 1;
+		}
+
+		if (raw[i] == '(') {
+			depth++;
+		}
+		if (raw[i] == ')') {
+			depth--;
 		}
 	}
-	let upper = key(inner);
+	if (depth != -1) {
+		return { raw, value: raw, params: [] };
+	}
+	return { raw, value, params };
+}
+
+function keyCombo(raw: string): KeyCombo {
+	let { value, params } = parse(raw);
+
+	let upper = key(value);
 	let lower = undefined;
 
-	if (outer !== undefined) {
-		if (outer.endsWith('_T')) {
-			lower = keymod(outer) ?? key(outer);
-		} else if (outer == 'MT' && outerParam !== undefined) {
-			lower = mod(outerParam);
-		} else if (outer == 'LM' && outerParam !== undefined) {
-			upper = [...mod(inner), [{ icon: 'LUCIDE_LAYERS_2_OPEN', text: outerParam }]];
+	if (params.length) {
+		upper = key(params[params.length - 1].value);
+		lower = [[{ text: value, type: 'raw' }]];
+
+		if (value.endsWith('_T') && params.length == 1) {
+			lower = keymod(value) ?? rawkey(value);
+		} else if (value == 'MT' && params.length == 2) {
+			lower = mod(params[0].value);
+		} else if (value == 'LM' && params.length == 2) {
+			upper = [...mod(params[1].value), [{ icon: 'LUCIDE_LAYERS_2_OPEN', text: params[0].value }]];
 			lower = [[{ text: 'LM', type: 'raw' }]];
-		} else if (outer == 'LT') {
-			lower = [[{ icon: 'LUCIDE_LAYERS_2' }], [{ text: outerParam, type: 'text' }]];
-		} else if (['MO', 'TG', 'TO', 'TT', 'DF', 'OSL'].includes(outer)) {
-			upper = [[{ icon: 'LUCIDE_LAYERS_2' }], [{ text: inner, type: 'text' }]];
-			lower = [[{ text: outer, type: 'raw' }]];
-		} else if (outer == 'OSM') {
-			upper = mod(inner);
-			lower = [[{ text: outer, type: 'raw' }]];
-		} else if (outer in knownKeys.modifiers) {
-			upper = [...(keymod(outer) ?? key(outer)), ...upper];
+		} else if (value == 'LT' && params.length == 2) {
+			lower = [[{ icon: 'LUCIDE_LAYERS_2' }], [{ text: params[0].value, type: 'text' }]];
+		} else if (['MO', 'TG', 'TO', 'TT', 'DF', 'OSL'].includes(value) && params.length == 1) {
+			upper = [[{ icon: 'LUCIDE_LAYERS_2' }], [{ text: params[0].value, type: 'text' }]];
+		} else if (value == 'OSM' && params.length == 1) {
+			upper = mod(params[0].value);
+		} else if (value in knownKeys.modifiers && params.length == 1) {
+			upper = [...(keymod(value) ?? rawkey(value)), ...upper];
 		} else {
-			lower = [[{ text: outer, type: 'raw' }]];
+			upper = key(params.map(({ raw }) => raw).join(','));
 		}
 	}
-	return { upper, lower };
+	return { upper, lower, parsed: { value, params, raw } };
 }
 
 function splitLabel(label: string): string[] {

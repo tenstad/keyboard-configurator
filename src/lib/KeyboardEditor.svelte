@@ -137,6 +137,7 @@
 						style:top="{(size + gap) * (key.y - minY)}px"
 						style:width="{size}px"
 						style:height="{size}px"
+						title={layers[layer][index].parsed.raw}
 					>
 						<div
 							class={(layer === draggedOver?.layer && index === draggedOver?.index
