@@ -10,8 +10,8 @@
 		Delete,
 		Diamond,
 		FastForward,
-		Layers2,
 		Option,
+		Play,
 		PowerOff,
 		Rewind,
 		SkipBack,
@@ -151,6 +151,8 @@
 	<FastForward {size} {strokeWidth} />
 {:else if label == 'LUCIDE_REWIND'}
 	<Rewind {size} {strokeWidth} />
+{:else if label == 'LUCIDE_PLAY'}
+	<Play {size} {strokeWidth} />
 {:else if label == 'LUCIDE_SQUARE_MENU'}
 	<SquareMenu {size} {strokeWidth} />
 {:else if label == 'LUCIDE_ARROW_LEFT_RIGHT_TO_LINE'}

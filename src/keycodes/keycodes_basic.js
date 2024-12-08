@@ -953,7 +953,7 @@ export default {
 	'0x00AE': {
 		group: 'media',
 		key: 'KC_MEDIA_PLAY_PAUSE',
-		label: 'Mute',
+		label: 'Play/Pause',
 		aliases: ['KC_MPLY']
 	},
 	'0x00AF': {
