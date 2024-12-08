@@ -11,7 +11,9 @@ Then start a development server:
 npm run dev
 ```
 
-## Debug layout
+## Debug Keyboard/Layout
+
+Following code can be used to create a test keyboard (with lots of keys) and layout that combines all used keycodes in qmk_firmware.
 
 ```bash
 echo '{"layouts":{"debug":{"layout":[' "$(for y in $(seq 0 186); do for x in $(seq 0 28); do echo "{\"matrix\": [$x, $y], \"x\": $x, \"y\": $y}",; done done)" "]" | sed "s/, \]/\]\}\}\}/" | jq -c
