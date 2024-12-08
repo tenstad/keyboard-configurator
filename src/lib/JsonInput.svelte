@@ -15,6 +15,10 @@
 			error = e;
 		}
 	});
+
+	$effect(() => {
+		value = JSON.stringify(data);
+	});
 </script>
 
 <div>

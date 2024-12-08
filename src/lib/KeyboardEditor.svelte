@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { keyDefinitions } from '../keycodes';
-	import Key from './Key.svelte';
 	import { displayLabel, type KeyCombo } from './keys';
-	import LabelGroup from './LabelGroup.svelte';
+	import Key from './Key.svelte';
 	import TabButton from './TabButton.svelte';
 
 	let size = 60;
