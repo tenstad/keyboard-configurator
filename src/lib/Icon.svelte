@@ -5,6 +5,7 @@
 		ArrowLeft,
 		ArrowRight,
 		ArrowUp,
+		ChevronDown,
 		Command,
 		CornerDownLeft,
 		Delete,
@@ -71,6 +72,8 @@
 	>
 {:else if label == 'LUCIDE_COMMAND'}
 	<Command {size} {strokeWidth} />
+{:else if label == 'LUCIDE_CHEVRON_DOWN'}
+	<ChevronDown {size} {strokeWidth} />
 {:else if label == 'LUCIDE_CHEVRON_UP'}
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

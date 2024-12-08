@@ -192,6 +192,7 @@ const abbreviations = {
 
 const icons = {
 	keys: {
+		KC_TRANSPARENT: 'LUCIDE_CHEVRON_DOWN',
 		KC_LEFT: 'LUCIDE_ARROW_LEFT',
 		KC_RIGHT: 'LUCIDE_ARROW_RIGHT',
 		KC_UP: 'LUCIDE_ARROW_UP',
