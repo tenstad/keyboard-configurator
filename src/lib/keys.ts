@@ -156,6 +156,7 @@ function splitLabel(label: string): string[] {
 		.replace(')', ')<word-break>')
 		.replace('_', '_<word-break>')
 		.replace('+', '+<word-break>')
+		.replace('/', '/<word-break>')
 		.split('<word-break>')
 		.map((str) => {
 			let chunks = [];
