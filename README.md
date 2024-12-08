@@ -1,5 +1,7 @@
 # keyboard-configurator
 
+![img](https://i.imgur.com/abNzMBz.png)
+
 ## Developing
 
 Install dependencies with `npm install` (or `pnpm install` or `yarn`).
