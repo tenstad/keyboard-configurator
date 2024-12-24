@@ -1,5 +1,7 @@
 # keyboard-configurator
 
+[tenstad.github.io/keyboard-configurator](https://tenstad.github.io/keyboard-configurator/)
+
 ![img](https://i.imgur.com/abNzMBz.png)
 
 ## Developing
